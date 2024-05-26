@@ -16,6 +16,9 @@
   "keywords": [],
   "license": "GNU",
   "dependencies": {
-    "concurrently": "^8.2.2"
+    "class-validator": "^0.14.1",
+    "concurrently": "^8.2.2",
+    "passport-jwt": "^4.0.1",
+    "passport-local": "^1.0.0"
   }
 }
