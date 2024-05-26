@@ -1,73 +1,252 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Task Management API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This API is designed for managing tasks, providing user authentication, and offering a dashboard with task statistics. It is built with NestJS and utilizes JWT for authentication.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Table of Contents
 
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- [Installation](#installation)
+- [Setting Up](#setting-up)
+- [Running the Application](#running-the-application)
+- [API Routes](#api-routes)
+  - [Auth Routes](#auth-routes)
+  - [Task Routes](#task-routes)
+  - [Dashboard Route](#dashboard-route)
+- [Swagger Documentation](#swagger-documentation)
 
 ## Installation
 
-```bash
-$ npm install
+Clone the repository and install the dependencies:
+
+git clone https://github.com/your-repository/task-management-api.git
+cd task-management-api
+npm install
 ```
 
-## Running the app
+## Setting Up
 
-```bash
-# development
-$ npm run start
+1. Create a `.env` file at the root of your project and add the following environment variables:
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+```env
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_USER=your_username
+DATABASE_PASSWORD=your_password
+DATABASE_NAME=your_database
+JWT_SECRET=jwt_secret
 ```
 
-## Test
+2. Ensure your database is running and accessible with the credentials provided in the `.env` file.
 
-```bash
-# unit tests
-$ npm run test
+## Running the Application
 
-# e2e tests
-$ npm run test:e2e
+Start the NestJS application:
 
-# test coverage
-$ npm run test:cov
+```sh
+npm run start
 ```
 
-## Support
+The application will run on `http://localhost:8080`.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## API Routes
 
-## Stay in touch
+### Auth Routes
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+#### Sign Up
+
+- **URL**: `/auth/signup`
+- **Method**: `POST`
+- **Body**:
+
+```json
+{
+  "username": "john_doe",
+  "password": "password123",
+  "email": "john_doe@example.com"
+}
+```
+
+- **Response**:
+
+```json
+{
+  "id": "123e4567-e89b-12d3-a456-426614174000",
+  "username": "john_doe",
+  "email": "john_doe@example.com",
+  "createdAt": "2024-05-01T00:00:00Z",
+  "updatedAt": "2024-05-01T00:00:00Z"
+}
+```
+
+#### Log In
+
+- **URL**: `/auth/login`
+- **Method**: `POST`
+- **Body**:
+
+```json
+{
+  "username": "john_doe",
+  "password": "password123"
+}
+```
+
+- **Response**:
+
+```json
+{
+  "access_token": "jwt_token"
+}
+```
+
+### Task Routes
+
+#### Create a Task
+
+- **URL**: `/tasks`
+- **Method**: `POST`
+- **Headers**: `Authorization: Bearer jwt_token`
+- **Body**:
+
+```json
+{
+  "title": "Finish the report",
+  "description": "Complete the quarterly report by end of the week",
+  "due_date": "2024-05-26T00:00:00Z",
+  "priority": "High",
+  "status": "Pending",
+  "assignee": "123e4567-e89b-12d3-a456-426614174001"
+}
+```
+
+- **Response**:
+
+```json
+{
+  "id": "123e4567-e89b-12d3-a456-426614174002",
+  "title": "Finish the report",
+  "description": "Complete the quarterly report by end of the week",
+  "due_date": "2024-05-26T00:00:00Z",
+  "priority": "High",
+  "status": "Pending",
+  "assignee": "123e4567-e89b-12d3-a456-426614174001",
+  "createdAt": "2024-05-01T00:00:00Z",
+  "updatedAt": "2024-05-01T00:00:00Z"
+}
+```
+
+#### Get a Task by ID
+
+- **URL**: `/tasks/:id`
+- **Method**: `GET`
+- **Headers**: `Authorization: Bearer jwt_token`
+- **Response**:
+
+```json
+{
+  "id": "123e4567-e89b-12d3-a456-426614174002",
+  "title": "Finish the report",
+  "description": "Complete the quarterly report by end of the week",
+  "due_date": "2024-05-26T00:00:00Z",
+  "priority": "High",
+  "status": "Pending",
+  "assignee": "123e4567-e89b-12d3-a456-426614174001",
+  "createdAt": "2024-05-01T00:00:00Z",
+  "updatedAt": "2024-05-01T00:00:00Z"
+}
+```
+
+#### Update a Task
+
+- **URL**: `/tasks/:id`
+- **Method**: `PUT`
+- **Headers**: `Authorization: Bearer jwt_token`
+- **Body**:
+
+```json
+{
+  "title": "Finish the report ASAP",
+  "description": "Complete the quarterly report by tomorrow",
+  "due_date": "2024-05-25T00:00:00Z",
+  "priority": "High",
+  "status": "In Progress",
+  "assignee": "123e4567-e89b-12d3-a456-426614174001"
+}
+```
+
+- **Response**:
+
+```json
+{
+  "id": "123e4567-e89b-12d3-a456-426614174002",
+  "title": "Finish the report ASAP",
+  "description": "Complete the quarterly report by tomorrow",
+  "due_date": "2024-05-25T00:00:00Z",
+  "priority": "High",
+  "status": "In Progress",
+  "assignee": "123e4567-e89b-12d3-a456-426614174001",
+  "createdAt": "2024-05-01T00:00:00Z",
+  "updatedAt": "2024-05-20T00:00:00Z"
+}
+```
+
+#### Delete a Task
+
+- **URL**: `/tasks/:id`
+- **Method**: `DELETE`
+- **Headers**: `Authorization: Bearer jwt_token`
+- **Response**:
+
+```json
+{
+  "message": "Task deleted successfully"
+}
+```
+
+### Dashboard Route
+
+#### Get Dashboard Data
+
+- **URL**: `/tasks/dashboard/:userId`
+- **Method**: `GET`
+- **Headers**: `Authorization: Bearer jwt_token`
+- **Response**:
+
+```json
+{
+  "totalTasks": 5,
+  "outstandingTasks": 3,
+  "overdueTasks": 2,
+  "overdueTaskDetails": [
+    {
+      "id": "123e4567-e89b-12d3-a456-426614174002",
+      "title": "Finish the report",
+      "description": "Complete the quarterly report by end of the week",
+      "due_date": "2024-05-20T00:00:00Z",
+      "priority": "High",
+      "status": "Pending",
+      "assignee": "123e4567-e89b-12d3-a456-426614174001",
+      "createdAt": "2024-05-01T00:00:00Z",
+      "updatedAt": "2024-05-01T00:00:00Z",
+      "overdueDays": 6
+    }
+  ]
+}
+```
+
+### Swagger Documentation
+
+The API documentation is generated using Swagger. You can access the Swagger UI at:
+
+```
+http://localhost:8080/api
+```
+
+This provides a user-friendly interface to explore and test the API endpoints.
+
+## Contributing
+
+TBA
 
 ## License
 
-Nest is [MIT licensed](LICENSE).
+This project is licensed under the MIT License.
