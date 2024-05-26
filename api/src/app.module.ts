@@ -7,6 +7,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './libs/auth/auth.module';
 import { UsersModule } from './libs/users/users.module';
+import { TasksModule } from './libs/tasks/tasks.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { UsersModule } from './libs/users/users.module';
       synchronize: true,
     }),
     AuthModule,
+    TasksModule,
     UsersModule,
   ],
   controllers: [AppController],
