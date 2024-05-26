@@ -1,3 +1,15 @@
+export enum TaskPriority {
+  LOW = 'Low',
+  MEDIUM = 'Medium',
+  HIGH = 'High',
+}
+
+export enum TaskStatus {
+  PENDING = 'Pending',
+  IN_PROGRESS = 'In Progress',
+  COMPLETED = 'Completed',
+}
+
 /**
  * Interface representing a task
  * @interface
@@ -34,18 +46,18 @@ export interface ITask {
   /**
    * The priority of the task
    * @example 'High'
-   * @enum ['Low', 'Medium', 'High']
-   * @type {string}
+   * @enum TaskPriority
+   * @type {TaskPriority}
    */
-  priority: 'Low' | 'Medium' | 'High';
+  priority: TaskPriority;
 
   /**
    * The status of the task
    * @example 'Pending'
-   * @enum ['Pending', 'In Progress', 'Completed']
-   * @type {string}
+   * @enum TaskStatus
+   * @type {TaskStatus}
    */
-  status: 'Pending' | 'In Progress' | 'Completed';
+  status: TaskStatus;
 
   /**
    * The identifier of the user assigned to the task
@@ -94,17 +106,17 @@ export interface ICreateTaskDto {
 
   /**
    * The priority of the task
-   * @enum ['Low', 'Medium', 'High']
-   * @type {string}
+   * @enum TaskPriority
+   * @type {TaskPriority}
    */
-  priority: 'Low' | 'Medium' | 'High';
+  priority: TaskPriority;
 
   /**
    * The status of the task
-   * @enum ['Pending', 'In Progress', 'Completed']
-   * @type {string}
+   * @enum TaskStatus
+   * @type {TaskStatus}
    */
-  status: 'Pending' | 'In Progress' | 'Completed';
+  status: TaskStatus;
 
   /**
    * The identifier of the user assigned to the task
@@ -138,17 +150,17 @@ export interface IUpdateTaskDto {
 
   /**
    * The priority of the task
-   * @enum ['Low', 'Medium', 'High']
-   * @type {string}
+   * @enum TaskPriority
+   * @type {TaskPriority}
    */
-  priority?: 'Low' | 'Medium' | 'High';
+  priority?: TaskPriority;
 
   /**
    * The status of the task
-   * @enum ['Pending', 'In Progress', 'Completed']
-   * @type {string}
+   * @enum TaskStatus
+   * @type {TaskStatus}
    */
-  status?: 'Pending' | 'In Progress' | 'Completed';
+  status?: TaskStatus;
 
   /**
    * The identifier of the user assigned to the task

@@ -1,5 +1,6 @@
 import { IsString, IsEnum, IsOptional, IsDateString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { TaskPriority, TaskStatus } from '../interfaces/tasks.interface';
 
 export class SearchTaskDto {
   @ApiProperty({
@@ -32,12 +33,12 @@ export class SearchTaskDto {
   @ApiProperty({
     example: 'Pending',
     description: 'The status of the task',
-    enum: ['Pending', 'In Progress', 'Completed'],
+    enum: TaskStatus,
     required: false,
   })
   @IsOptional()
-  @IsEnum(['Pending', 'In Progress', 'Completed'])
-  status?: string;
+  @IsEnum(TaskStatus)
+  status?: TaskStatus;
 
   @ApiProperty({
     example: '2024-05-26T00:00:00Z',
@@ -51,10 +52,10 @@ export class SearchTaskDto {
   @ApiProperty({
     example: 'High',
     description: 'The priority of the task',
-    enum: ['Low', 'Medium', 'High'],
+    enum: TaskPriority,
     required: false,
   })
   @IsOptional()
-  @IsEnum(['Low', 'Medium', 'High'])
-  priority?: string;
+  @IsEnum(TaskPriority)
+  priority?: TaskPriority;
 }

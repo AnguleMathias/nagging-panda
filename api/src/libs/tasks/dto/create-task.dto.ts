@@ -1,5 +1,6 @@
 import { IsString, IsDate, IsEnum } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { TaskPriority, TaskStatus } from '../interfaces/tasks.interface';
 
 export class CreateTaskDto {
   @ApiProperty({ example: 'Task title', description: 'The title of the task' })
@@ -23,18 +24,18 @@ export class CreateTaskDto {
   @ApiProperty({
     example: 'High',
     description: 'The priority of the task',
-    enum: ['Low', 'Medium', 'High'],
+    enum: TaskPriority,
   })
-  @IsEnum(['Low', 'Medium', 'High'])
-  priority: string;
+  @IsEnum(TaskPriority)
+  priority: TaskPriority;
 
   @ApiProperty({
     example: 'Pending',
     description: 'The status of the task',
-    enum: ['Pending', 'In Progress', 'Completed'],
+    enum: TaskStatus,
   })
-  @IsEnum(['Pending', 'In Progress', 'Completed'])
-  status: string;
+  @IsEnum(TaskStatus)
+  status: TaskStatus;
 }
 
 export class UpdateTaskDto extends CreateTaskDto {}
