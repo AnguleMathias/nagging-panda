@@ -16,8 +16,8 @@ This API is designed for managing tasks, providing user authentication, and offe
 ## Installation
 
 Clone the repository and install the dependencies:
-
-git clone https://github.com/your-repository/task-management-api.git
+```
+git clone https://github.com/AnguleMathias/nagging-panda.git
 cd task-management-api
 npm install
 ```
