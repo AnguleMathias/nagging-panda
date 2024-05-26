@@ -233,6 +233,40 @@ The application will run on `http://localhost:8080`.
 }
 ```
 
+### Search Route
+
+#### Search and Filter Tasks
+
+- **URL**: `/tasks/search/:userId`
+- **Method**: `GET`
+- **Headers**: `Authorization: Bearer jwt_token`
+- **Query Parameters**:
+```json
+{
+  "title": "report",
+  "status": "Pending",
+  "priority": "High",
+  "dueDate": "2024-05-26T00:00:00Z",
+  "assignee": "123e4567-e89b-12d3-a456-426614174001"
+}
+```
+- **Response**:
+```json
+[
+  {
+    "id": "123e4567-e89b-12d3-a456-426614174002",
+    "title": "Finish the report",
+    "description": "Complete the quarterly report by end of the week",
+    "due_date": "2024-05-26T00:00:00Z",
+    "priority": "High",
+    "status": "Pending",
+    "assignee": "123e4567-e89b-12d3-a456-426614174001",
+    "createdAt": "2024-05-01T00:00:00Z",
+    "updatedAt": "2024-05-01T00:00:00Z"
+  }
+]
+```
+
 ### Swagger Documentation
 
 The API documentation is generated using Swagger. You can access the Swagger UI at:
@@ -247,6 +281,3 @@ This provides a user-friendly interface to explore and test the API endpoints.
 
 TBA
 
-## License
-
-This project is licensed under the MIT License.
