@@ -19,16 +19,19 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const existingUser = await this.findOne(createUserDto.username);
-    if (existingUser) {
-      throw new ConflictException('Username already exists');
-    }
-
-    const existingEmail = await this.usersRepository.findOne({
-      where: { email: createUserDto.email },
+    const existingUser = await this.usersRepository.findOne({
+      where: [
+        { username: createUserDto.username },
+        { email: createUserDto.email },
+      ],
     });
-    if (existingEmail) {
-      throw new ConflictException('Email already exists');
+
+    if (existingUser) {
+      if (existingUser.username === createUserDto.username) {
+        throw new ConflictException('Username already exists');
+      } else if (existingUser.email === createUserDto.email) {
+        throw new ConflictException('Email already exists');
+      }
     }
 
     const salt = await bcrypt.genSalt();
@@ -52,6 +55,15 @@ export class UsersService {
     return user;
   }
 
+  async findOneByUsername(username: string): Promise<User> {
+    const user = await this.usersRepository.findOne({ where: { username } });
+
+    if (!user) {
+      throw new NotFoundException(`User with username ${username} not found`);
+    }
+    return user;
+  }
+
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     await this.usersRepository.update(id, updateUserDto);
     return this.findOne(id);
@@ -62,7 +74,7 @@ export class UsersService {
   }
 
   async validatePassword(username: string, pass: string): Promise<boolean> {
-    const user = await this.findOne(username);
+    const user = await this.findOneByUsername(username);
     if (!user) {
       return false;
     }

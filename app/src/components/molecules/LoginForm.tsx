@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import Input from "../atoms/Input";
@@ -34,14 +34,16 @@ const LoginForm: React.FC = () => {
 
     try {
       await dispatch(login({ username, password }));
-
-      if (auth.isAuthenticated && auth.token) {
-        router.push("/home");
-      }
     } catch (error) {
       setErrors({ general: "Login failed" });
     }
   };
+
+  useEffect(() => {
+    if (auth.isAuthenticated && auth.token) {
+      router.push("/home");
+    }
+  }, [auth.isAuthenticated, auth.token, router]);
 
   return (
     <div className="w-full max-w-lg mx-auto p-4 border border-gray-300 rounded">

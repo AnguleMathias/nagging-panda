@@ -15,7 +15,8 @@ export class AuthService {
   ) {}
   async validateUser(username: string, pass: string): Promise<any> {
     try {
-      const user = await this.usersService.findOne(username);
+      const user = await this.usersService.findOneByUsername(username);
+
       if (user && (await this.usersService.validatePassword(username, pass))) {
         const { password, ...result } = user;
         return result;
@@ -28,7 +29,9 @@ export class AuthService {
 
   async login(user: any) {
     try {
-      const foundUser = await this.usersService.findOne(user.username);
+      const foundUser = await this.usersService.findOneByUsername(
+        user.username,
+      );
 
       if (!foundUser) {
         throw new UnauthorizedException('Invalid credentials');

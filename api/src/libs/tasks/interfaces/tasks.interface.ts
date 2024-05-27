@@ -64,7 +64,14 @@ export interface ITask {
    * @example '123e4567-e89b-12d3-a456-426614174001'
    * @type {string}
    */
-  assignee: string;
+  user_id: string;
+
+  /**
+   * The username of the user assigned to the task
+   * @example 'john_doe'
+   * @type {string}
+   */
+  assignee_username: string;
 
   /**
    * The date and time when the task was created
@@ -122,7 +129,7 @@ export interface ICreateTaskDto {
    * The identifier of the user assigned to the task
    * @type {string}
    */
-  assignee: string;
+  user_id: string;
 }
 
 /**
@@ -166,5 +173,5 @@ export interface IUpdateTaskDto {
    * The identifier of the user assigned to the task
    * @type {string}
    */
-  assignee?: string;
+  user_id?: string;
 }
