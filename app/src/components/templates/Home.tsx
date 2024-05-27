@@ -55,7 +55,7 @@ const Home: React.FC = () => {
             type="text"
             value={filters.title}
             onChange={handleFilterChange}
-            name="title"
+            placeholder="Search by title"
           />
           <Input
             id="dueDate"
@@ -63,7 +63,7 @@ const Home: React.FC = () => {
             type="date"
             value={filters.dueDate}
             onChange={handleFilterChange}
-            name="dueDate"
+            placeholder="Search by due date"
           />
           <div>
             <label className="block text-gray-700 text-sm font-bold mb-2">

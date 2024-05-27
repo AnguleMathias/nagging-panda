@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
+import { ToastContainer, toast, cssTransition } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface Props {
   pageProps: any;
@@ -25,6 +27,31 @@ const Page: React.FC<Props> = ({ Component, pageProps }) => {
 
   return (
     <PersistGate loading={null} persistor={persistor}>
+      <div>
+        <ToastContainer
+          position="top-right"
+          autoClose={2000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          transition={cssTransition({
+            enter: "toastify__slideEnter",
+            exit: "toastify__slideExit",
+
+            appendPosition: false,
+            collapse: true,
+            collapseDuration: 2,
+          })}
+          toastClassName={() =>
+            "relative flex p-1 min-h-10 rounded-md justify-between overflow-hidden cursor-pointer bg-blue-500 text-white"
+          }
+          bodyClassName={() => "flex text-sm font-white block p-3"}
+        />
+      </div>
       <Component {...pageProps} />
     </PersistGate>
   );

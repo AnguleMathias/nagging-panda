@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
 import { AppDispatch, RootState } from "@/store";
 import {
   deleteTask,
@@ -8,12 +9,13 @@ import {
   updateTask,
 } from "@/store/taskSlice";
 import { ITask, IUser } from "@/types/types";
-import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+
+import { fetchUsers } from "@/services/userApi";
+import Button from "../atoms/Button";
 import TaskItem from "../molecules/TaskItem";
 import TaskModal from "../molecules/TaskModal";
-import Button from "../atoms/Button";
-import { fetchUsers } from "@/services/userApi";
 
 const TaskList: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -42,6 +44,7 @@ const TaskList: React.FC = () => {
 
   const handleDelete = (id: string) => {
     dispatch(deleteTask(id));
+    toast.success("Task deleted successfully!");
   };
 
   const handleEdit = (task: ITask) => {
@@ -51,9 +54,12 @@ const TaskList: React.FC = () => {
 
   const handleSave = async (task: Partial<ITask>) => {
     if (selectedTask) {
-      await dispatch(updateTask({ id: selectedTask.id, ...task }));
+      await dispatch(updateTask({ id: selectedTask.id || '', ...task }));
+      toast.success("Task updated successfully!");
+
     } else {
-      await dispatch(createTask({ ...task, user_id: userId }));
+      await dispatch(createTask({ ...task, user_id: userId || '' }));
+      toast.success("Task created successfully!");
     }
     setSelectedTask(null);
     setIsModalOpen(false);

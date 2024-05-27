@@ -20,6 +20,7 @@ export class TasksService {
     return this.tasksRepository.find({
       where: { user_id: userId },
       relations: ['user'],
+      order: { createdAt: 'DESC' },
     });
   }
 

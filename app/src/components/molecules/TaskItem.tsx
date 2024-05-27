@@ -22,13 +22,23 @@ const TaskItem: React.FC<TaskItemProps> = ({
   return (
     <div className="border p-4 rounded mb-4 shadow-sm bg-white">
       <h3 className="text-xl font-bold text-gray-800">{task.title}</h3>
+
       <p className="text-gray-600">{task.description}</p>
+
+      <p className="text-gray-600">
+        Created At: {new Date(task.createdAt).toLocaleDateString()}
+      </p>
+
       <p className="text-gray-600">
         Due Date: {new Date(task.due_date).toLocaleDateString()}
       </p>
+
       <p className="text-gray-600">Priority: {task.priority}</p>
+
       <p className="text-gray-600">Status: {task.status}</p>
+
       <p className="text-gray-600">Assignee: {assignee?.username || ""}</p>
+
       <div className="flex space-x-2 mt-4">
         <Button
           onClick={() => handleEdit(task)}
