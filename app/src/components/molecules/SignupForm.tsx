@@ -69,8 +69,7 @@ const SignupForm: React.FC = () => {
   };
 
   return (
-    <div className="w-full max-w-lg mx-auto p-4 border border-gray-300 rounded">
-      <h2 className="text-2xl font-bold mb-4">Signup</h2>
+    <div className="w-full max-w-lg mx-auto p-4">
       {errors.general && <p className="text-red-500 mb-4">{errors.general}</p>}
       <Input
         id="username"
