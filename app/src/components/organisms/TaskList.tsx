@@ -7,12 +7,13 @@ import {
   createTask,
   updateTask,
 } from "@/store/taskSlice";
-import { ITask } from "@/types/types";
+import { ITask, IUser } from "@/types/types";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import TaskItem from "../molecules/TaskItem";
 import TaskModal from "../molecules/TaskModal";
 import Button from "../atoms/Button";
+import { fetchUsers } from "@/services/userApi";
 
 const TaskList: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -22,6 +23,16 @@ const TaskList: React.FC = () => {
   const userId = useSelector((state: RootState) => state.auth.userId);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<ITask | null>(null);
+  const [users, setUsers] = useState<IUser[]>([]);
+
+  useEffect(() => {
+    const fetchAllUsers = async () => {
+      const users = await fetchUsers();
+      setUsers(users);
+    };
+
+    fetchAllUsers();
+  }, []);
 
   useEffect(() => {
     if (userId) {
@@ -40,7 +51,7 @@ const TaskList: React.FC = () => {
 
   const handleSave = async (task: Partial<ITask>) => {
     if (selectedTask) {
-      await dispatch(updateTask(selectedTask.id, task));
+      await dispatch(updateTask({ id: selectedTask.id, ...task }));
     } else {
       await dispatch(createTask({ ...task, user_id: userId }));
     }
@@ -74,6 +85,7 @@ const TaskList: React.FC = () => {
             task={task}
             handleDelete={handleDelete}
             handleEdit={handleEdit}
+            users={users}
           />
         ))}
       </ul>
@@ -82,6 +94,7 @@ const TaskList: React.FC = () => {
         onClose={() => setIsModalOpen(false)}
         onSave={handleSave}
         task={selectedTask}
+        users={users}
       />
     </div>
   );

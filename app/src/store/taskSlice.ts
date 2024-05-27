@@ -34,6 +34,7 @@ export const createTask = createAsyncThunk(
 export const updateTask = createAsyncThunk(
   "tasks/updateTask",
   async ({ id, task }: { id: string; task: Partial<ITask> }) => {
+    console.log("now here")
     const updatedTask = await taskApi.updateTask(id, task);
     return updatedTask;
   }

@@ -7,6 +7,7 @@ import Button from "../atoms/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store";
 import { fetchTasks } from "@/store/taskSlice";
+import { logout } from "@/store/authSlice";
 
 const Home: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -30,9 +31,21 @@ const Home: React.FC = () => {
     }
   };
 
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4">Tasks</h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-3xl font-bold">Tasks</h1>
+        <Button
+          onClick={handleLogout}
+          className="bg-red-500 text-white px-4 py-2 rounded"
+        >
+          Logout
+        </Button>
+      </div>
       <div className="mb-4 p-4 border rounded shadow-sm bg-white">
         <h2 className="text-xl font-bold mb-4">Filters</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

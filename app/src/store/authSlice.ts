@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import axios from "axios";
 import { isTokenExpired } from "@/utils/auth";
+import { signOut } from "next-auth/react";
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -78,6 +79,7 @@ const authSlice = createSlice({
       state.userId = null;
       localStorage.removeItem("token");
       localStorage.removeItem("userId");
+      signOut({ redirect: false });
     },
     checkTokenExpiration(state) {
       if (state.token) {

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { ITask, TaskPriority, TaskStatus } from "@/types/types";
+import { ITask, IUser, TaskPriority, TaskStatus } from "@/types/types";
 import Input from "../atoms/Input";
 import Button from "../atoms/Button";
 
@@ -10,6 +10,7 @@ interface TaskModalProps {
   onClose: () => void;
   onSave: (task: Partial<ITask>) => void;
   task?: ITask | null;
+  users: IUser[];
 }
 
 const TaskModal: React.FC<TaskModalProps> = ({
@@ -17,6 +18,7 @@ const TaskModal: React.FC<TaskModalProps> = ({
   onClose,
   onSave,
   task,
+  users,
 }) => {
   const [title, setTitle] = useState(task?.title || "");
   const [description, setDescription] = useState(task?.description || "");
@@ -29,6 +31,7 @@ const TaskModal: React.FC<TaskModalProps> = ({
   const [status, setStatus] = useState<TaskStatus>(
     task?.status || TaskStatus.PENDING
   );
+  const [assignee, setAssignee] = useState(task?.user_id || "");
 
   const handleSubmit = () => {
     onSave({
@@ -37,6 +40,7 @@ const TaskModal: React.FC<TaskModalProps> = ({
       due_date: new Date(dueDate),
       priority,
       status,
+      user_id: assignee,
     });
     onClose();
   };
@@ -53,7 +57,7 @@ const TaskModal: React.FC<TaskModalProps> = ({
           id="title"
           label="Title"
           type="text"
-          placeholder="Task Title"
+          placeholder="Enter task title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
@@ -61,7 +65,7 @@ const TaskModal: React.FC<TaskModalProps> = ({
           id="description"
           label="Description"
           type="text"
-          placeholder="Task Description"
+          placeholder="Enter task description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
@@ -69,7 +73,7 @@ const TaskModal: React.FC<TaskModalProps> = ({
           id="dueDate"
           label="Due Date"
           type="date"
-          placeholder="Due Date"
+          placeholder="Enter due date"
           value={dueDate}
           onChange={(e) => setDueDate(e.target.value)}
         />
@@ -96,6 +100,20 @@ const TaskModal: React.FC<TaskModalProps> = ({
           <option value="Pending">Pending</option>
           <option value="In Progress">In Progress</option>
           <option value="Completed">Completed</option>
+        </select>
+        <label className="block text-gray-700 text-sm font-bold mb-2">
+          Assignee
+        </label>
+        <select
+          className="w-full p-2 border border-gray-300 rounded mb-2"
+          value={assignee}
+          onChange={(e) => setAssignee(e.target.value)}
+        >
+          {users.map((user) => (
+            <option key={user.id} value={user.id}>
+              {user.username}
+            </option>
+          ))}
         </select>
         <div className="flex justify-end space-x-2">
           <Button
