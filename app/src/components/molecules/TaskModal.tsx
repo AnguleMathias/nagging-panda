@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ITask, IUser, TaskPriority, TaskStatus } from "@/types/types";
 import Input from "../atoms/Input";
 import Button from "../atoms/Button";
@@ -32,6 +32,24 @@ const TaskModal: React.FC<TaskModalProps> = ({
     task?.status || TaskStatus.PENDING
   );
   const [assignee, setAssignee] = useState(task?.user_id || "");
+
+  useEffect(() => {
+    if (task) {
+      setTitle(task.title);
+      setDescription(task.description);
+      setDueDate(new Date(task.due_date).toISOString().substring(0, 10));
+      setPriority(task.priority);
+      setStatus(task.status);
+      setAssignee(task.user_id);
+    } else {
+      setTitle("");
+      setDescription("");
+      setDueDate("");
+      setPriority(TaskPriority.LOW);
+      setStatus(TaskStatus.PENDING);
+      setAssignee("");
+    }
+  }, [task]);
 
   const handleSubmit = () => {
     onSave({
@@ -85,9 +103,9 @@ const TaskModal: React.FC<TaskModalProps> = ({
           value={priority}
           onChange={(e) => setPriority(e.target.value as TaskPriority)}
         >
-          <option value="Low">Low</option>
-          <option value="Medium">Medium</option>
-          <option value="High">High</option>
+          <option value={TaskPriority.LOW}>Low</option>
+          <option value={TaskPriority.MEDIUM}>Medium</option>
+          <option value={TaskPriority.HIGH}>High</option>
         </select>
         <label className="block text-gray-700 text-sm font-bold mb-2">
           Status
@@ -97,9 +115,9 @@ const TaskModal: React.FC<TaskModalProps> = ({
           value={status}
           onChange={(e) => setStatus(e.target.value as TaskStatus)}
         >
-          <option value="Pending">Pending</option>
-          <option value="In Progress">In Progress</option>
-          <option value="Completed">Completed</option>
+          <option value={TaskStatus.PENDING}>Pending</option>
+          <option value={TaskStatus.IN_PROGRESS}>In Progress</option>
+          <option value={TaskStatus.COMPLETED}>Completed</option>
         </select>
         <label className="block text-gray-700 text-sm font-bold mb-2">
           Assignee

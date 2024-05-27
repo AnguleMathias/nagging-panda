@@ -54,11 +54,10 @@ const TaskList: React.FC = () => {
 
   const handleSave = async (task: Partial<ITask>) => {
     if (selectedTask) {
-      await dispatch(updateTask({ id: selectedTask.id || '', ...task }));
+      await dispatch(updateTask({ id: selectedTask.id, task }));
       toast.success("Task updated successfully!");
-
     } else {
-      await dispatch(createTask({ ...task, user_id: userId || '' }));
+      await dispatch(createTask({ ...task, user_id: userId || "" }));
       toast.success("Task created successfully!");
     }
     setSelectedTask(null);

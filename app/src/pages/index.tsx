@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import { ToastContainer, toast, cssTransition } from "react-toastify";
+import { ToastContainer, cssTransition } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 interface Props {
@@ -41,7 +41,6 @@ const Page: React.FC<Props> = ({ Component, pageProps }) => {
           transition={cssTransition({
             enter: "toastify__slideEnter",
             exit: "toastify__slideExit",
-
             appendPosition: false,
             collapse: true,
             collapseDuration: 2,
