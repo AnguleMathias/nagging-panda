@@ -29,5 +29,8 @@ export class Task {
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'user_id' })
+  user: User;
+
+  @Column()
   user_id: string;
 }

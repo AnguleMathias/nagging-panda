@@ -17,7 +17,10 @@ export class TasksService {
   }
 
   findAll(userId: string): Promise<Task[]> {
-    return this.tasksRepository.find({ where: { user_id: userId } });
+    return this.tasksRepository.find({
+      where: { user_id: userId },
+      relations: ['user'],
+    });
   }
 
   findOne(id: string): Promise<Task> {

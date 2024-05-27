@@ -1,25 +1,34 @@
+"use client";
+
 import React, { useEffect } from "react";
 import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
-import { RootState } from "../store";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "../store";
+import { logout, checkTokenExpiration } from "../store/authSlice";
 
 const withAuth = (WrappedComponent: React.ComponentType) => {
-  const Wrapper = (props: any) => {
-    const router = useRouter();
+  const AuthComponent: React.FC = (props) => {
+    const dispatch = useDispatch<AppDispatch>();
     const auth = useSelector((state: RootState) => state.auth);
-    console.log("right here")
+    const router = useRouter();
 
     useEffect(() => {
-      console.log("this 1")
-      if (!auth.isAuthenticated) {
+      dispatch(checkTokenExpiration());
+
+      if (!auth.isAuthenticated || !auth.token) {
+        dispatch(logout());
         router.push("/login");
       }
-    }, [auth.isAuthenticated, router]);
+    }, [auth.isAuthenticated, auth.token, dispatch, router]);
 
-    return auth.isAuthenticated ? <WrappedComponent {...props} /> : null;
+    if (!auth.isAuthenticated || !auth.token) {
+      return null; // or a loading spinner
+    }
+
+    return <WrappedComponent {...props} />;
   };
 
-  return Wrapper;
+  return AuthComponent;
 };
 
 export default withAuth;

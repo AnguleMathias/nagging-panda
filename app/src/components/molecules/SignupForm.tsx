@@ -1,17 +1,17 @@
 "use client";
 
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
-import Input from "../atoms/Input";
-import Button from "../atoms/Button";
-import { signup } from "../../store/authSlice";
-import { RootState, AppDispatch } from "../../store";
 import Link from "next/link";
+
+import { AppDispatch } from "../../store";
+import { signup } from "../../store/authSlice";
+import Button from "../atoms/Button";
+import Input from "../atoms/Input";
 
 const SignupForm: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const auth = useSelector((state: RootState) => state.auth);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -42,17 +42,36 @@ const SignupForm: React.FC = () => {
       return;
     }
 
-    const response = await dispatch(signup({ username, password, email }));
+    try {
+      const response = await dispatch(signup({ username, password, email }));
 
-    if (response.meta.requestStatus === "fulfilled") {
-      router.push("/login");
+      if (response.meta.requestStatus === "fulfilled") {
+        router.push("/login");
+      }
+
+      if (response.meta.requestStatus === "rejected") {
+        if (response.payload === "Username already exists") {
+          validationErrors.username = "Username already exists";
+        }
+
+        if (response.payload === "Email already exists") {
+          validationErrors.email = "Email already exists";
+        }
+
+        if (Object.keys(validationErrors).length > 0) {
+          setErrors(validationErrors);
+          return;
+        }
+      }
+    } catch (error) {
+      setErrors({ general: "Signup failed" });
     }
   };
 
   return (
     <div className="w-full max-w-lg mx-auto p-4 border border-gray-300 rounded">
       <h2 className="text-2xl font-bold mb-4">Signup</h2>
-      {auth.error && <p className="text-red-500 mb-4">{auth.error}</p>}
+      {errors.general && <p className="text-red-500 mb-4">{errors.general}</p>}
       <Input
         id="username"
         type="text"
@@ -62,6 +81,7 @@ const SignupForm: React.FC = () => {
         label="Username"
         error={errors.username}
       />
+
       <Input
         id="email"
         type="email"
@@ -71,6 +91,7 @@ const SignupForm: React.FC = () => {
         label="Email"
         error={errors.email}
       />
+
       <Input
         id="password"
         type="password"
@@ -80,6 +101,7 @@ const SignupForm: React.FC = () => {
         label="Password"
         error={errors.password}
       />
+
       <Input
         id="confirmPassword"
         type="password"

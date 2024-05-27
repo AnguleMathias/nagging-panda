@@ -1,33 +1,54 @@
-import { Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import {
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UsersService } from '../users/users.service';
+import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly usersService: UsersService,
-    private readonly jwtService: JwtService,
+    private usersService: UsersService,
+    private jwtService: JwtService,
   ) {}
-
   async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOne(username);
-    if (user && user.password === pass) {
-      const { password, ...result } = user;
-      return result;
+    try {
+      const user = await this.usersService.findOne(username);
+      if (user && (await this.usersService.validatePassword(username, pass))) {
+        const { password, ...result } = user;
+        return result;
+      }
+      return null;
+    } catch (error) {
+      throw new InternalServerErrorException('Error validating user');
     }
-    return null;
   }
 
   async login(user: any) {
-    const payload = { username: user.username, sub: user.userId };
+    try {
+      const foundUser = await this.usersService.findOne(user.username);
 
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+      if (!foundUser) {
+        throw new UnauthorizedException('Invalid credentials');
+      }
+
+      const payload = { username: user.username, sub: foundUser.id };
+
+      return {
+        accessToken: this.jwtService.sign(payload),
+        userId: foundUser.id,
+      };
+    } catch (error) {
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Error logging in');
+    }
   }
 
-  async signup(userDto: CreateUserDto) {
-    return this.usersService.create(userDto);
+  async signup(createUserDto: CreateUserDto) {
+    return this.usersService.create(createUserDto);
   }
 }

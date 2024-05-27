@@ -8,7 +8,7 @@ export const useFetch = () => {
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
-    console.log("here now")
+    console.log("here now fetching tasks")
     const getData = async () => {
       try {
         const tasks = await fetchTasks();

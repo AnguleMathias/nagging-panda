@@ -2,19 +2,42 @@
 
 import { ITask } from "@/types/types";
 import React from "react";
+import Button from "../atoms/Button";
 
 interface TaskItemProps {
   task: ITask;
+  handleDelete: (id: string) => void;
+  handleEdit: (task: ITask) => void;
 }
 
-const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
+const TaskItem: React.FC<TaskItemProps> = ({
+  task,
+  handleDelete,
+  handleEdit,
+}) => {
   return (
-    <div className="border p-4 rounded mb-2">
-      <h3 className="text-xl font-bold">{task.title}</h3>
-      <p>{task.description}</p>
-      <p>Due Date: {new Date(task.due_date).toLocaleDateString()}</p>
-      <p>Priority: {task.priority}</p>
-      <p>Status: {task.status}</p>
+    <div className="border p-4 rounded mb-4 shadow-sm bg-white">
+      <h3 className="text-xl font-bold text-gray-800">{task.title}</h3>
+      <p className="text-gray-600">{task.description}</p>
+      <p className="text-gray-600">
+        Due Date: {new Date(task.due_date).toLocaleDateString()}
+      </p>
+      <p className="text-gray-600">Priority: {task.priority}</p>
+      <p className="text-gray-600">Status: {task.status}</p>
+      <div className="flex space-x-2 mt-4">
+        <Button
+          onClick={() => handleEdit(task)}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Edit
+        </Button>
+        <Button
+          onClick={() => handleDelete(task.id)}
+          className="bg-red-500 text-white px-4 py-2 rounded"
+        >
+          Delete
+        </Button>
+      </div>
     </div>
   );
 };

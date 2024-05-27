@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 interface InputProps {
   type: string;
@@ -21,6 +22,14 @@ const Input: React.FC<InputProps> = ({
   error,
   id,
 }) => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const inputType = type === "password" && showPassword ? "text" : type;
+
   return (
     <div className="mb-4">
       {label && (
@@ -31,16 +40,26 @@ const Input: React.FC<InputProps> = ({
           {label}
         </label>
       )}
-      <input
-        id={id}
-        type={type}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        className={`w-full p-2 border ${
-          error ? "border-red-500" : "border-gray-300"
-        } rounded mb-2`}
-      />
+      <div className="relative">
+        <input
+          id={id}
+          type={inputType}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          className={`w-full p-2 border ${
+            error ? "border-red-500" : "border-gray-300"
+          } rounded mb-2`}
+        />
+        {type === "password" && (
+          <div
+            className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+            onClick={togglePasswordVisibility}
+          >
+            {showPassword ? <FaEyeSlash /> : <FaEye />}
+          </div>
+        )}
+      </div>
       {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
     </div>
   );
