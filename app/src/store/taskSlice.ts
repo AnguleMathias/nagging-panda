@@ -55,6 +55,14 @@ export const deleteTask = createAsyncThunk(
   }
 );
 
+export const searchAndFilterTasks = createAsyncThunk(
+  "tasks/searchAndFilterTasks",
+  async ({ userId, filters }: { userId: string; filters: any }) => {
+    const response = await taskApi.searchAndFilterTasksApi(userId, filters);
+    return response.data;
+  }
+);
+
 const taskSlice = createSlice({
   name: "tasks",
   initialState,
@@ -128,6 +136,20 @@ const taskSlice = createSlice({
       .addCase(deleteTask.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to delete task";
+      })
+      .addCase(searchAndFilterTasks.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(
+        searchAndFilterTasks.fulfilled,
+        (state, action: PayloadAction<ITask[]>) => {
+          state.loading = false;
+          state.tasks = action.payload;
+        }
+      )
+      .addCase(searchAndFilterTasks.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to fetch tasks";
       });
   },
 });

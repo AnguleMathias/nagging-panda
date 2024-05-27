@@ -8,6 +8,7 @@ import {
   fetchAllTasks,
   createTask,
   updateTask,
+  searchAndFilterTasks,
 } from "@/store/taskSlice";
 import { ITask, IUser } from "@/types/types";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,7 +19,19 @@ import Button from "../atoms/Button";
 import TaskItem from "../molecules/TaskItem";
 import TaskModal from "../molecules/TaskModal";
 
-const TaskList: React.FC = () => {
+interface TaskListProps {
+  filters: {
+    title: string;
+    description: string;
+    assignee: string;
+    status: string;
+    priority: string;
+    dueDate: string;
+  };
+  users: IUser[];
+}
+
+const TaskList: React.FC<TaskListProps> = ({ filters, users }) => {
   const dispatch = useDispatch<AppDispatch>();
   const { tasks, loading, error } = useSelector(
     (state: RootState) => state.tasks
@@ -26,7 +39,7 @@ const TaskList: React.FC = () => {
   const userId = useSelector((state: RootState) => state.auth.userId);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<ITask | null>(null);
-  const [users, setUsers] = useState<IUser[]>([]);
+  
   const [filterMode, setFilterMode] = useState<"all" | "my">("my");
 
   const handleDelete = (id: string) => {
@@ -56,14 +69,7 @@ const TaskList: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  useEffect(() => {
-    const fetchAllUsers = async () => {
-      const users = await fetchUsers();
-      setUsers(users);
-    };
-
-    fetchAllUsers();
-  }, []);
+ 
 
   useEffect(() => {
     if (filterMode === "my" && userId) {
@@ -72,6 +78,12 @@ const TaskList: React.FC = () => {
       dispatch(fetchAllTasks());
     }
   }, [dispatch, userId, filterMode]);
+
+  useEffect(() => {
+    if (userId) {
+      dispatch(searchAndFilterTasks({ userId, filters }));
+    }
+  }, [dispatch, userId, filters]);
 
   const toggleFilterMode = () => {
     setFilterMode((prevMode) => (prevMode === "my" ? "all" : "my"));
@@ -114,18 +126,24 @@ const TaskList: React.FC = () => {
           </p>
         </div>
       )}
-      <ul>
-        {tasks.map((task: ITask) => (
-          <TaskItem
-            key={task.id}
-            task={task}
-            handleDelete={handleDelete}
-            handleEdit={handleEdit}
-            users={users}
-            canEditOrDelete={task.user_id === userId}
-          />
-        ))}
-      </ul>
+      {tasks.length === 0 ? (
+        <div className="text-center mt-8">
+          <p className="text-gray-500">No tasks available. Create a task</p>
+        </div>
+      ) : (
+        <ul>
+          {tasks.map((task: ITask) => (
+            <TaskItem
+              key={task.id}
+              task={task}
+              handleDelete={handleDelete}
+              handleEdit={handleEdit}
+              users={users}
+              canEditOrDelete={task.user_id === userId}
+            />
+          ))}
+        </ul>
+      )}
       <TaskModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

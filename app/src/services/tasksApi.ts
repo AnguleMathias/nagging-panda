@@ -58,3 +58,14 @@ export const deleteTask = async (taskId: string) => {
     },
   });
 };
+
+export const searchAndFilterTasksApi = async (userId: string, filters: any) => {
+  const token = getAuthToken();
+  const response = await axios.get<ITask[]>(`${API_URL}/search/${userId}`, {
+    params: filters,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response;
+};

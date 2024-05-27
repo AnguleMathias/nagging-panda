@@ -11,6 +11,7 @@ interface InputProps {
   label?: string;
   error?: string;
   id?: string;
+  name?: string;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -21,6 +22,7 @@ const Input: React.FC<InputProps> = ({
   label,
   error,
   id,
+  name
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -46,6 +48,7 @@ const Input: React.FC<InputProps> = ({
           type={inputType}
           placeholder={placeholder}
           value={value}
+          name={name}
           onChange={onChange}
           className={`w-full p-2 border ${
             error ? "border-red-500" : "border-gray-300"
