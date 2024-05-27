@@ -20,6 +20,16 @@ export const fetchTasks = async (userId: string) => {
   return response.data;
 };
 
+export const fetchAllTasksApi = async () => {
+  const token = getAuthToken();
+  const response = await axios.get<ITask[]>(API_URL, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
 export const createTask = async (task: Partial<ITask>) => {
   const token = getAuthToken();
   const response = await axios.post<ITask>(API_URL, task, {

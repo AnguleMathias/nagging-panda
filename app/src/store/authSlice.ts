@@ -106,11 +106,6 @@ const authSlice = createSlice({
       state.token = action.payload?.accessToken || null;
       state.userId = action.payload?.userId;
       if (state.token && state.userId) {
-        console.log(
-          "setting token and userId in local storage",
-          state.token,
-          state.userId
-        );
         localStorage.setItem("token", state.token);
         localStorage.setItem("userId", state.userId);
       }

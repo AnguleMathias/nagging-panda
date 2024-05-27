@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 
 import * as taskApi from "../services/tasksApi";
 import { ITask } from "@/types/types";
@@ -20,6 +20,14 @@ export const fetchTasks = createAsyncThunk(
   async (userId: string) => {
     const tasks = await taskApi.fetchTasks(userId);
     return tasks;
+  }
+);
+
+export const fetchAllTasks = createAsyncThunk(
+  "tasks/fetchAllTasks",
+  async () => {
+    const response = await taskApi.fetchAllTasksApi();
+    return response;
   }
 );
 
@@ -62,6 +70,21 @@ const taskSlice = createSlice({
         state.tasks = action.payload;
       })
       .addCase(fetchTasks.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to fetch tasks";
+      })
+      .addCase(fetchAllTasks.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        fetchAllTasks.fulfilled,
+        (state, action: PayloadAction<ITask[]>) => {
+          state.loading = false;
+          state.tasks = action.payload;
+        }
+      )
+      .addCase(fetchAllTasks.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch tasks";
       })

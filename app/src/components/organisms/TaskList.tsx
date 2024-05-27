@@ -5,6 +5,7 @@ import { AppDispatch, RootState } from "@/store";
 import {
   deleteTask,
   fetchTasks,
+  fetchAllTasks,
   createTask,
   updateTask,
 } from "@/store/taskSlice";
@@ -26,21 +27,7 @@ const TaskList: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<ITask | null>(null);
   const [users, setUsers] = useState<IUser[]>([]);
-
-  useEffect(() => {
-    const fetchAllUsers = async () => {
-      const users = await fetchUsers();
-      setUsers(users);
-    };
-
-    fetchAllUsers();
-  }, []);
-
-  useEffect(() => {
-    if (userId) {
-      dispatch(fetchTasks(userId));
-    }
-  }, [dispatch, userId]);
+  const [filterMode, setFilterMode] = useState<"all" | "my">("my");
 
   const handleDelete = (id: string) => {
     dispatch(deleteTask(id));
@@ -69,6 +56,27 @@ const TaskList: React.FC = () => {
     setIsModalOpen(true);
   };
 
+  useEffect(() => {
+    const fetchAllUsers = async () => {
+      const users = await fetchUsers();
+      setUsers(users);
+    };
+
+    fetchAllUsers();
+  }, []);
+
+  useEffect(() => {
+    if (filterMode === "my" && userId) {
+      dispatch(fetchTasks(userId));
+    } else {
+      dispatch(fetchAllTasks());
+    }
+  }, [dispatch, userId, filterMode]);
+
+  const toggleFilterMode = () => {
+    setFilterMode((prevMode) => (prevMode === "my" ? "all" : "my"));
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
@@ -83,6 +91,16 @@ const TaskList: React.FC = () => {
           Create Task
         </Button>
       </div>
+      <div className="flex justify-between mb-4">
+        <Button
+          onClick={toggleFilterMode}
+          className={`${
+            filterMode === "my" ? "bg-blue-500" : "bg-gray-500"
+          } text-white px-4 py-2 rounded`}
+        >
+          {filterMode === "my" ? "Show All Tasks" : "Show My Tasks"}
+        </Button>
+      </div>
       <ul>
         {tasks.map((task: ITask) => (
           <TaskItem
@@ -91,6 +109,7 @@ const TaskList: React.FC = () => {
             handleDelete={handleDelete}
             handleEdit={handleEdit}
             users={users}
+            canEditOrDelete={task.user_id === userId}
           />
         ))}
       </ul>
