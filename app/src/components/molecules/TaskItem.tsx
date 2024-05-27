@@ -7,8 +7,6 @@ import {
   FaExclamationCircle,
   FaCheckCircle,
   FaHourglassHalf,
-  FaLine,
-  FaExclamation,
 } from "react-icons/fa";
 
 interface TaskItemProps {
@@ -28,6 +26,10 @@ const TaskItem: React.FC<TaskItemProps> = ({
 }) => {
   const assignee = users.find((user) => user.id === task.user_id);
   const isOverdue = new Date(task.due_date) < new Date();
+  const daysOverdue = Math.ceil(
+    (new Date().getTime() - new Date(task.due_date).getTime()) /
+      (1000 * 3600 * 24)
+  );
 
   const getPriorityIcon = (priority: string) => {
     switch (priority) {
@@ -36,7 +38,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
       case "Medium":
         return <FaHourglassHalf className="text-yellow-500" />;
       case "Low":
-        return <FaExclamation className="text-green-500" />;
+        return <FaCheckCircle className="text-green-500" />;
       default:
         return null;
     }
@@ -45,27 +47,23 @@ const TaskItem: React.FC<TaskItemProps> = ({
   return (
     <div className="border p-4 rounded mb-4 shadow-sm bg-white">
       <h3 className="text-xl font-bold text-gray-800">{task.title}</h3>
-
       <p className="text-gray-600">{task.description}</p>
-
       <p className="text-gray-600">
         Created At: {new Date(task.createdAt).toLocaleDateString()}
       </p>
-
       <p
         className={`text-gray-600 inline-block ${
-          isOverdue ? "bg-red-100 rounded p-1" : ""
+          isOverdue ? "bg-red-100" : ""
         }`}
       >
-        Due Date: {new Date(task.due_date).toLocaleDateString()}
+        Due Date: {new Date(task.due_date).toLocaleDateString()}{" "}
+        {isOverdue && `(Overdue by ${daysOverdue} days)`}
       </p>
-
-      <p className="text-gray-600 flex items-center gap-1">
-        Priority: {task.priority} {getPriorityIcon(task.priority)}
+      <p className="text-gray-600 flex items-center inline-block">
+        Priority: {task.priority}{" "}
+        <span className="ml-1">{getPriorityIcon(task.priority)}</span>
       </p>
-
       <p className="text-gray-600">Status: {task.status}</p>
-
       <p className="text-gray-600">Assignee: {assignee?.username || ""}</p>
 
       {canEditOrDelete && (

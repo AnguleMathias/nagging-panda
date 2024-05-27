@@ -77,30 +77,43 @@ const TaskList: React.FC = () => {
     setFilterMode((prevMode) => (prevMode === "my" ? "all" : "my"));
   };
 
+  const outstandingTasksCount = tasks.filter(
+    (task) => task.user_id === userId && task.status !== "Completed"
+  ).length;
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
     <div>
       <div className="flex justify-between mb-4">
-        <h2 className="text-2xl font-bold">Task List</h2>
-        <Button
-          onClick={handleCreate}
-          className="bg-green-500 text-white px-4 py-2 rounded"
-        >
-          Create Task
-        </Button>
+        <h2 className="text-2xl font-bold">
+          {filterMode === "my" ? "My Tasks" : "All Tasks"}
+        </h2>
+        <div>
+          <Button
+            onClick={toggleFilterMode}
+            className={`mr-2 ${
+              filterMode === "my" ? "bg-blue-500" : "bg-gray-500"
+            } text-white px-4 py-2 rounded`}
+          >
+            {filterMode === "my" ? "All Tasks" : "My Tasks"}
+          </Button>
+          <Button
+            onClick={handleCreate}
+            className="bg-green-500 text-white px-4 py-2 rounded"
+          >
+            Create Task
+          </Button>
+        </div>
       </div>
-      <div className="flex justify-between mb-4">
-        <Button
-          onClick={toggleFilterMode}
-          className={`${
-            filterMode === "my" ? "bg-blue-500" : "bg-gray-500"
-          } text-white px-4 py-2 rounded`}
-        >
-          {filterMode === "my" ? "Show All Tasks" : "Show My Tasks"}
-        </Button>
-      </div>
+      {filterMode === "my" && (
+        <div className="mb-4">
+          <p className="text-lg font-semibold">
+            My Outstanding Tasks: {outstandingTasksCount}
+          </p>
+        </div>
+      )}
       <ul>
         {tasks.map((task: ITask) => (
           <TaskItem

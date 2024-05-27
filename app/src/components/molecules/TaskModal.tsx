@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { ITask, IUser, TaskPriority, TaskStatus } from "@/types/types";
 import Input from "../atoms/Input";
 import Button from "../atoms/Button";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 interface TaskModalProps {
   isOpen: boolean;
@@ -20,6 +22,8 @@ const TaskModal: React.FC<TaskModalProps> = ({
   task,
   users,
 }) => {
+  const userId = useSelector((state: RootState) => state.auth.userId);
+
   const [title, setTitle] = useState(task?.title || "");
   const [description, setDescription] = useState(task?.description || "");
   const [dueDate, setDueDate] = useState(
@@ -58,7 +62,7 @@ const TaskModal: React.FC<TaskModalProps> = ({
       due_date: new Date(dueDate),
       priority,
       status,
-      user_id: assignee,
+      user_id: userId || assignee,
     });
     onClose();
   };
@@ -119,20 +123,7 @@ const TaskModal: React.FC<TaskModalProps> = ({
           <option value={TaskStatus.IN_PROGRESS}>In Progress</option>
           <option value={TaskStatus.COMPLETED}>Completed</option>
         </select>
-        <label className="block text-gray-700 text-sm font-bold mb-2">
-          Assignee
-        </label>
-        <select
-          className="w-full p-2 border border-gray-300 rounded mb-2"
-          value={assignee}
-          onChange={(e) => setAssignee(e.target.value)}
-        >
-          {users.map((user) => (
-            <option key={user.id} value={user.id}>
-              {user.username}
-            </option>
-          ))}
-        </select>
+
         <div className="flex justify-end space-x-2">
           <Button
             onClick={onClose}
