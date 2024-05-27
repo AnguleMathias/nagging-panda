@@ -9,7 +9,7 @@ const readFileAsync = promisify(fs.readFile);
 const writeFileAsync = promisify(fs.writeFile);
 
 const apiDir = path.dirname(require.main.filename);
-const clientAppDir = path.join(apiDir, '../app');
+const clientAppDir = path.join(apiDir, '../app/src/types');
 const outputFile = path.join(clientAppDir, 'types.ts');
 
 console.log('API Directory:', apiDir);
