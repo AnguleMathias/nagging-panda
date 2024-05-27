@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Between } from 'typeorm';
+import { Repository, Between, ILike } from 'typeorm';
 import { Task } from './entities/task.entity';
 import { CreateTaskDto, UpdateTaskDto } from './dto/create-task.dto';
 
@@ -67,10 +67,16 @@ export class TasksService {
     const where: any = { user_id: userId };
 
     if (searchParams.title) {
-      where.title = searchParams.title;
+      where.title = ILike(`%${searchParams.title}%`);
     }
     if (searchParams.status) {
       where.status = searchParams.status;
+    }
+    if (searchParams.description) {
+      where.description = ILike(`%${searchParams.description}%`);
+    }
+    if (searchParams.assignee) {
+      where.user_id = searchParams.assignee;
     }
     if (searchParams.priority) {
       where.priority = searchParams.priority;
