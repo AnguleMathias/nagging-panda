@@ -104,4 +104,4 @@ This task management system enables users to effectively manage their tasks by p
 
 ---
 
-Developed with ❤️ by [Mathias Angule].
+Developed with ❤️ by [Mathias Angule](https://github.com/AnguleMathias).
